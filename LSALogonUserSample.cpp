@@ -208,7 +208,7 @@ BOOL ConstructAuthCertInfo(const KERB_CERTIFICATE_UNLOCK_LOGON& rkiulIn,LPBYTE* 
             // acquire private key container to this certificate    
             if (CryptAcquireCertificatePrivateKey(pCertContext, CRYPT_ACQUIRE_ALLOW_NCRYPT_KEY_FLAG, NULL, &hProv, &dwKeySpec, &bFreeHandle))
             {
-                cout << "The private key container handle is accessed.. The dwKeySpec Value is: "<<dwKeySpec<<endl;
+                cout << "The private key container handle is accessed.. "<<endl<<"The dwKeySpec Value is: "<<dwKeySpec<<endl;
             
 
                 //Fetching the container name where the certificate is stored
@@ -436,7 +436,12 @@ int _tmain(int argc, _TCHAR* argv[])
         if (nStatus == STATUS_SUCCESS)
         {
 
-            ConstructAuthCertInfo(ckiul,&pbAuthInfo, &ulAuthInfoLen);
+            if (!ConstructAuthCertInfo(ckiul, &pbAuthInfo, &ulAuthInfoLen))
+            {
+                cout << "Could not serialize the authentication data. Exiting...";
+                cin >> x;
+                return 0;
+            }
 
             nStatus = LsaLogonUser(lsaHandle,
                 &lsaOriginName,
